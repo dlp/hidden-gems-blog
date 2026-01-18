@@ -42,6 +42,8 @@ tags: ["Anleitung", "Blog"]
 ---
 ```
 
+Das Datum wird automatisch aus dem Verzeichnisnamen übernommen.
+
 ### Markdown
 
 - **Überschriften**: Verwende `#` für Hauptüberschriften, `##` für Unterüberschriften usw.
@@ -58,7 +60,7 @@ Du kannst Bilder in deinem Artikel einfügen:
 
 ### HTML
 
-Du kannst auch HTML-Tags verwenden, um deinen Artikel weiter zu gestalten.
+Du kannst auch HTML-Tags verwenden, um deinen Artikel weiter zu gestalten, z. B. mit Tabellen:
 
 <div style='max-width: 100%; overflow-x: auto;'>
 <table class='table table-sm'>

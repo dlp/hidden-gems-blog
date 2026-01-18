@@ -402,7 +402,7 @@ server.mount_proc "/" do |req, res|
             displayMath: [['$$', '$$']]
           },
         };
-        var brightness = 'light';
+        var brightness = 'auto';
         var system_brightness = 'light';
         var dark_css_element = null;
 
@@ -411,6 +411,7 @@ server.mount_proc "/" do |req, res|
             if (brightness === 'auto') dark = (system_brightness === 'dark');
             if (brightness === 'light') dark = false;
             if (brightness === 'dark') dark = true;
+            console.log("Dark mode:", dark);
             if (dark) {
                 document.getElementsByTagName('html')[0].setAttribute('data-bs-theme', 'dark');
             } else {
