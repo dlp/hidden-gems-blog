@@ -11,7 +11,7 @@ tags: ["Anleitung", "Blog"]
 
 Willkommen zu unserem Blog für den »Hidden Gems«-Wettbewerb! Hier veröffentlichen Teilnehmerinnen und Teilnehmer ihre Beiträge: spannende Analysen, Strategieskizzen, Erklärungen zu Algorithmen oder Erfahrungsberichte aus dem Wettbewerb.
 
-Wenn du selbst mitmachen möchtest, erfährst du in diesem ersten Beitrag, wie du eigene Artikel einreichen kannst.
+Das Ziel dieses Blogs ist es, eure Ideen sichtbar zu machen. Jeder Beitrag ist eine Chance, etwas Interessantes zu zeigen – sei es ein kreativer Lösungsweg, eine technische Herausforderung oder eine besondere Erkenntnis aus eurem Projekt.
 
 ## Repository forken und klonen
 
