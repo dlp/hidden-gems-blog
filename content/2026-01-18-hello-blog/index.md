@@ -1,6 +1,5 @@
 ---
 author: Michael Specht
-author_email: specht@gymnasiumsteglitz.de
 author_bio: >
   Informatiklehrer am Gymnasium Steglitz und
   Organisator des »Hidden Gems«-Wettbewerbs.
@@ -33,7 +32,6 @@ Gib oben in der `index.md`-Datei die Metadaten deines Artikels im YAML-Format an
 ```yaml
 ---
 author: Michael Specht
-author_email: specht@gymnasiumsteglitz.de
 author_bio: >
   Informatiklehrer am Gymnasium Steglitz und
   Organisator des »Hidden Gems«-Wettbewerbs.
