@@ -13,6 +13,8 @@ Willkommen zu unserem Blog für den »Hidden Gems«-Wettbewerb! Hier veröffentl
 
 Das Ziel dieses Blogs ist es, eure Ideen sichtbar zu machen. Jeder Beitrag ist eine Chance, etwas Interessantes zu zeigen – sei es ein kreativer Lösungsweg, eine technische Herausforderung oder eine besondere Erkenntnis aus eurem Projekt.
 
+Du möchtest selbst einen Artikel schreiben? Super! In diesem Beitrag erfährst du, wie du einen Beitrag schreiben und ihn hier veröffentlichen kannst — ganz egal, ob du technische Details zeigen oder deine Gedanken teilen willst.
+
 ## Repository forken und klonen
 
 Öffne das »Hidden Gems«-Blog-Repository unter [https://github.com/specht/hidden-gems-blog](https://github.com/specht/hidden-gems-blog) und lege einen Fork an. Klone deinen Fork anschließend auf deinen lokalen Rechner.
