@@ -9,8 +9,7 @@ tags: ["Anleitung", "Blog"]
 
 # Willkommen im Hidden-Gems-Blog
 
-Willkommen zu unserem Blog für den »Hidden Gems«-Wettbewerb!
-Hier veröffentlichen Teilnehmerinnen und Teilnehmer ihre Beiträge: spannende Analysen, Strategieskizzen, Erklärungen zu Algorithmen oder Erfahrungsberichte aus dem Wettbewerb.
+Willkommen zu unserem Blog für den »Hidden Gems«-Wettbewerb! Hier veröffentlichen Teilnehmerinnen und Teilnehmer ihre Beiträge: spannende Analysen, Strategieskizzen, Erklärungen zu Algorithmen oder Erfahrungsberichte aus dem Wettbewerb.
 
 Wenn du selbst mitmachen möchtest, erfährst du in diesem ersten Beitrag, wie du eigene Artikel einreichen kannst.
 
