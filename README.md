@@ -10,6 +10,4 @@ In diesem Blog könnt ihr Artikel veröffentlichen, die mit dem »Hidden Gems«-
 
 ## Beitrag erstellen
 
-Um einen neuen Blog-Beitrag einzureichen, forkt bitte dieses Repository und erstellt ein neues Verzeichnis. Darin muss sich eine `index.md`-Datei befinden, die euren Artikel im Markdown-Format enthält. Zusätzlich könnt ihr Bilder, Replays (im json.gz-Format) und andere Ressourcen in demselben Verzeichnis ablegen.
-
-Schickt anschließend einen Pull-Request mit eurem neuen Verzeichnis. Wir werden den Beitrag dann prüfen und bei Bedarf Feedback geben, bevor wir ihn in den Hauptblog integrieren.
+Um einen neuen Blog-Beitrag einzureichen, beachte bitte die Anleitung im ersten Blog-Artikel: [Wie schreibe ich einen Blog-Artikel?](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-18-hello-blog)
