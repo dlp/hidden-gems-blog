@@ -25,6 +25,11 @@ Erstelle in deinem lokalen Repository im Unterverzeichnis `content`ein neues Ver
 
 Schreibe deinen Artikel in der `index.md`-Datei. Du kannst Markdown verwenden, um deinen Text zu formatieren, Bilder einzufügen und Links hinzuzufügen.
 
+<div class="alert alert-info">
+    Um den Code zu sehen, der diesem Artikel zugrunde liegt, schau dir die <a href='https://raw.githubusercontent.com/specht/hidden-gems-blog/refs/heads/main/content/2026-01-18-hello-blog/index.md' target="_blank">index.md</a>-Datei
+    dieses Artikels im GitHub-Repository an.
+</div>
+
 ### Front Matter
 
 Gib oben in der `index.md`-Datei die Metadaten deines Artikels im YAML-Format an. Hier ist ein Beispiel:
