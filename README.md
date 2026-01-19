@@ -10,4 +10,4 @@ In diesem Blog könnt ihr Artikel veröffentlichen, die mit dem »Hidden Gems«-
 
 ## Beitrag erstellen
 
-Um einen neuen Blog-Beitrag einzureichen, beachte bitte die Anleitung im ersten Blog-Artikel: [Wie schreibe ich einen Blog-Artikel?](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-18-hello-blog)
+Um einen neuen Blog-Beitrag einzureichen, beachte bitte die Anleitung im ersten Blog-Artikel: [Willkommen im Hidden-Gems-Blog!](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-18-hello-blog)
