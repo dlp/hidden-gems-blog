@@ -141,7 +141,7 @@ Gehe zu deinem Fork auf GitHub und erstelle einen Pull Request, um deine Änderu
 Um ein Preview deines Artikels zu sehen, kannst du einfach den lokalen Preview-Server starten:
 
 ```bash
-gem install rouge webrick kramdown-parser-gfm # nur beim ersten Mal nötig
+gem install rouge webrick kramdown kramdown-parser-gfm # nur beim ersten Mal nötig
 ruby server.rb [pfad-zu-deinem-artikel]
 ```
 
