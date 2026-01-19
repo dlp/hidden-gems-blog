@@ -5,7 +5,7 @@ author_bio: >
 tags: ["Monte-Carlo", "Markov-Chain", "Signals", "Algorithmus"]
 ---
 
-# Mit Zufall ans Ziel (aka Metropolis-Hastings-Algorithmus)
+# Mit Zufall ans Ziel (aka Metro&shy;polis-Hastings-Algo&shy;rithmus)
 
 
 ## Einleitung
