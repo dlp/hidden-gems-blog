@@ -54,7 +54,7 @@ point::point(void) { x = y = 0; }
 point::point(int x0, int y0) { x = x0; y = y0; }
 float point::dist2(void) { return (float)(x*x + y*y); }
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 1</em>
 </div>
 
@@ -67,7 +67,7 @@ struct SgnLvl {
 };
 
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 2</em>
 </div>
 
@@ -82,7 +82,7 @@ float signal_level(point& p, const float& r)
     return 1.0 / (1.0 + d2/(r*r));
 }
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 3</em>
 </div>
 
@@ -123,7 +123,7 @@ void calculate_signal_levels(const float& r)
     bubble_sort();
 }
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 4</em>
 </div>
 
@@ -135,7 +135,7 @@ SgnLvl    *SIGNAL_LVL = NULL;     // Array mit den berechneten Signalstärken
 ...
 SIGNAL_LVL = new SgnLvl[MAXLVL];   // Speicherplatz reservieren
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 5</em>
 </div>
 
@@ -168,7 +168,7 @@ void bubble_sort(void)
                 swap_signal_levels(j, j+1);
 }
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 6</em>
 </div>
 
@@ -190,7 +190,7 @@ struct SgnEvn {
     point   *dist;  // Zeiger auf das Array der Zielvektoren
 };
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 7</em>
 </div>
 
@@ -204,7 +204,7 @@ SIGNAL_EVENT = new SgnStr[MAXTICKS];  // Speicherplatz reservieren
 for (int i = 0; i < MAXTICKS; i++)
     SIGNAL_EVENT[i].dist = new point[80];  // max. 80 Zielvektoren für ein Summensignal
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 8</em>
 </div>
 
@@ -236,7 +236,7 @@ void get_signal_levels(const float& lvl)
 
     ...
 ```
-<div style='margin-top: -0.5em; margin-bottom: 1em;'>
+<div style='margin-top: -0.75em; margin-bottom: 1em; font-size: 85%;'>
 <em>Codefragment 9</em>
 </div>
 
@@ -275,19 +275,19 @@ Wie viel genaue Zielvektoren sind nun im Einzelnen möglich? Bei genauerer Betra
 <div class='row'>
 <div class='col-md-4'>
 <img src="hiddengems-2.gif" class='w-100'>
-<div style='margin-top: 0; margin-bottom: 1em;'>
+<div style='margin-top: 0.25em; margin-bottom: 1em; font-size: 85%;'>
 <em>Fall 1: Prototyp $[5, 0]$</em>
 </div>
 </div>
 <div class='col-md-4'>
 <img src="hiddengems-3.gif" class='w-100'>
-<div style='margin-top: 0; margin-bottom: 1em;'>
+<div style='margin-top: 0.25em; margin-bottom: 1em; font-size: 85%;'>
 <em>Fall 2: Prototyp $[5, 5]$</em>
 </div>
 </div>
 <div class='col-md-4'>
 <img src="hiddengems-1.gif" class='w-100'>
-<div style='margin-top: 0; margin-bottom: 1em;'>
+<div style='margin-top: 0.25em; margin-bottom: 1em; font-size: 85%;'>
 <em>Fall 3: Prototyp $[5, 2]$</em>
 </div>
 </div>
