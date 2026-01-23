@@ -8,7 +8,7 @@ tags: ["Algorithmus", "Lokalisierung", "Position", "Signal"]
 
 # Lokalisierung von Gems anhand von Summensignalen (Teil 2)
 
-Im [Teil 1 dieses Blogs](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-22-lokalisierung-von-gems-anhand-von-summensignalen) wird erläutert, wie das vom JSON-string mitgeteilte Summensignal sich aus mehreren Einzelsignalstärken zusammensetzt und wie diese mit den sog. *Zielvektoren* und den daraus abgeleiteten *genauen Zielvektoren* zusammenhängen. Ein Vergleich der genauen Zielvektoren in einem bestimmten Tick mit denjenigen aus dem Vorgängertick erlaubt nun, wie wir sehen werden, eine zuverlässige Lokalisierung von plötzlich auftauchenden Gems. 
+Im [Teil 1 dieses Blogs](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-22-lokalisierung-von-gems-anhand-von-summensignalen) wurde erläutert, wie das vom JSON-string mitgeteilte Summensignal sich aus mehreren Einzelsignalstärken zusammensetzt und wie diese mit den sog. *Zielvektoren* und den daraus abgeleiteten *genauen Zielvektoren* zusammenhängen. Ein Vergleich der genauen Zielvektoren in einem bestimmten Tick mit denjenigen aus dem Vorgängertick erlaubt nun, wie wir sehen werden, eine zuverlässige Lokalisierung von plötzlich auftauchenden Gems. 
 
 ## Weitere nützliche Datenstrukturen
 
