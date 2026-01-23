@@ -296,4 +296,4 @@ Wie viel genaue Zielvektoren sind nun im Einzelnen möglich? Bei genauerer Betra
 </div>
 </div>
 
-Im Teil 2 wird beschrieben, wie das Summensignal in Einzelsignale zerlegt wird, und wie nach einem oder zwei weiteren Ticks die Position des Gems zuverlässig festgestellt werden kann.
+Im [Teil 2](https://hiddengems.gymnasiumsteglitz.de/blog/2026-01-24-lokalisierung-von-gems-anhand-von-summensignalen-2) wird beschrieben, wie das Summensignal in Einzelsignale zerlegt wird, und wie nach einem oder zwei weiteren Ticks die Position des Gems zuverlässig festgestellt werden kann.
