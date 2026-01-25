@@ -3,7 +3,7 @@ author: Arti
 author_bio: > 
   Schüler.
 author_image: car.jpg
-tags: ["Blog"]
+tags: ["Blog", "KI"]
 ---
 
 # Wie man bei einer KI für HG scheitert
