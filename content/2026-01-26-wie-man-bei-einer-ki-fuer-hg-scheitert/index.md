@@ -6,7 +6,7 @@ author_image: car.jpg
 tags: ["Blog", "KI"]
 ---
 
-# Wie man bei einer KI für HG scheitert
+# Wie man bei einer KI für »Hidden Gems« scheitert
 
 Seit Stage 1 habe ich versucht, das durchzusetzen, aber wie ihr schon an der Überschrift erkannt habt, gelang es mir nicht so ganz haha…
 
