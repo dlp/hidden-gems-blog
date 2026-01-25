@@ -8,7 +8,7 @@ tags: ["Wegfindung", "floating", "Algorithmus"]
 
 # Bau eines floating Algorithmus zur Wegfindung
 
-Algorithmen zur Wegfindung gibt es fast so viele wie Sand im Ganges.
+Algorithmen zur Wegfindung gibt es fast so viele wie Sandkörner im Ganges.
 
 Besonders bekannt und beliebt sind `BFS` und `A*`. 
 
