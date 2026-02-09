@@ -70,7 +70,7 @@ Du kannst auch Replays deiner Spiele einbinden, um deine Artikel noch anschaulic
 </div>
 
 <div class='alert alert-warning'>
-    Achte darauf, dass du nicht nur die `.json.gz`-Datei, sondern auch die dazugehörige `-poster.json.gz`-Datei benötigst, damit die Vorschau korrekt funktioniert.
+    Achte darauf, dass du nicht nur die <code>.json.gz</code>-Datei, sondern auch die dazugehörige <code>-poster.json.gz</code>-Datei benötigst, damit die Vorschau korrekt funktioniert.
 </div>
 
 #### HTML
