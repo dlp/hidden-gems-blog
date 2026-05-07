@@ -4,7 +4,7 @@ author_bio: >
   Software Entwickler und Nachteule /
   Dipl.-Ing. Elektrotechnik
 author_image: charlie_and_owl.jpg
-tags: ["Sparring", "Linux", "netcat", "socat"]
+tags: ["Sparring", "Linux", "WSL2", "remote", "netcat", "socat", "redirection", "tcp", "IPv6"]
 ---
 
 # Live-Sparring mit Bot-Proxy
@@ -19,20 +19,20 @@ In diesem Beitrag fangen wir mit der einfachsten Idee an und arbeiten uns im Lau
 
 In einem vorigen [Blogbeitrag](https://hiddengems.gymnasiumsteglitz.de/blog/2026-02-17-botsteuerung-aus-dem-terminal) haben wir über Weiterleitungen der Ein- und Ausgaben gelesen.  Dadurch ist es beispielsweise möglich, die Standardausgabe an einen anderen Prozess zu schicken, und dessen Ausgabe wiederum als Standardeingabe zu lesen.  Man ist dabei nicht auf die Standardeingabe und -ausgabe beschränkt, sondern kann das im Prinzip mit (fast) allen Filedeskriptoren machen.  So funktioniert auch die Kommunikation vonseiten des Runners mit den Bots.
 
-![Der Runner kommuniziert mit den Bots über die Standardein/-ausgabe.](runner_bots_local.drawio.png)
+![Runner with local bots](runner_bots_local.drawio.png "Der Runner kommuniziert mit den Bots über die Standardein/-ausgabe.")
 
 
 ## Netcat
 
 Wenn es nun irgendwie möglich wäre, die Ein- und Ausgaben zum und vom Runner nict nur an einen lokalen Bot umzuleiten, sondern über das Netzwerk zu schicken, könnte man Runner und Bot auf getrennten Rechnern ausführen...  Meet **netcat**! Es gilt als Schweizer Taschenmesser für Netzwerkverbindungen, und wird am häufigsten genau dazu eingesetzt, Weiterleitungen über das Netzwerk zu realisieren.
 
-![netcat: Schweizer Taschenmesser für Netzwerkverbindungen](victorinox_explorer.jpg)
+![Victorinox Explorer Swiss Knife](victorinox_explorer.jpg "netcat: Schweizer Taschenmesser für Netzwerkverbindungen")
 
 
 Die Idee ist dabei folgende. Ein Spieler übernimmt die Rolle des Servers: der Runner und der eigene Bot des Spielers werden auf dessen Rechner ausgeführt.
 Mithilfe von jeweils einem netcat (`nc`) Prozess an den Enden der Verbindung wollen wir die Datenströme zwischen Runner und dem anderen Bot über das Netzwerk schicken, nämlich zum Rechner des anderen Spielers, der in der Client Rolle ist. Wir verwenden dazu TCP, ein verbindungsorientiertes Protokoll. Am Server startet `nc` im *listening* Modus, er wartet auf eingehende Verbindungen. Der Client initiiert den Verbindungsaufbau mittels *connect* zum Server.
 
-![Der Runner kommuniziert mit einem entfernten Bot.](runner_bot_remote.drawio.png)
+![Runner with one remote bot](runner_bot_remote.drawio.png "Der Runner kommuniziert mit einem entfernten Bot.")
 
 
 Der Runner sieht hierbei keinen Unterschied, lediglich die Antworten lassen länger auf sich warten - wir merken uns, die Timeouts zu deaktivieren.  Auch der Bot sieht keinen Unterschied, er liest weiterhin das JSON von der Standardeingabe, führt seine Berechnungen durch und schreibt move & highlight auf die Standardausgabe. Und die Debugausgaben auf der Standardfehlerausgabe? Die bleiben lokal. Entweder lesen wir mit wenn sie auf dem Terminal ausgegeben werden, oder wir leiten sie alternativ auf `/dev/null` um.
@@ -82,7 +82,7 @@ exec ./start.sh "$@" <&"${NETCAT[0]}" >&"${NETCAT[1]}"
 ```
 
 Aufgerufen wird das Skript mit der IP-Adresse des Servers als Argument.  Die „Magie“ passiert in den letzten zwei Zeilen:
-`coproc` startet den Command `{ nc $HOST $PORT ; }` nebenläufig, und leitet dessn Standardein- und -ausgaben in Filedescriptoren, die über das Array `NETCAT` zugänglich sind, um. Das heißt, wir können Daten an `nc`, der sich mit dem Server verbindet, schicken, indem wir sie in `${NETCAT[1]}` schreiben, und können die vom `nc` gelesenen Daten von `${NETCAT[0]}` lesen.
+`coproc` startet den Command `{ nc $HOST $PORT ; }` nebenläufig, und leitet dessen Standardein- und -ausgaben in Filedescriptoren, die über das Array `NETCAT` zugänglich sind, um. Das heißt, wir können Daten an `nc`, der sich mit dem Server verbindet, schicken, indem wir sie in `${NETCAT[1]}` schreiben, und können die vom `nc` gelesenen Daten von `${NETCAT[0]}` lesen.
 Das passiert in der letzten Zeile, in welcher wir das Bot-Start-Skript `start.sh`, welches normalerweise der Runner ausführt, mit den entsprechenden Umleitungen aufrufen.
 
 Der Runner legt die Aufzeichnung im Runner-Verzeichnis ab:
@@ -92,18 +92,55 @@ Der Runner legt die Aufzeichnung im Runner-Verzeichnis ab:
 </div>
 
 
+
+## Going remote mit IPv6
+
+Was ich verschiegen habe: getestet wurde das erstmal lokal, was wunderbar funktioniert hat.
+Über das Internet hatten wir „Startschwierigkeiten“. Einer von uns muss der Server sein, und aus dem Internet erreichbar sein.
+Prinzipiell hat man innerhalb der EU ein [Recht auf eine öffentliche IP Adresse,](https://www.rtr.at/TKP/was_wir_tun/telekommunikation/konsumentenservice/faq/FAQ_oeffentliche_IP-adresse.de.html), sofern man diese anfordert. Von meinem aktuellen ISP hatte ich noch keine public IP Adresse angefordert. Aber mein ISP weist mir eine IPv6 Adresse zu - damit sollte mein Notebook auch aus dem Internet erreichbar sein! Eine gute Gelegeneit, um IPv6 Freigaben zu testen. Ich habe in meiner Fritz-Box Config eine Freigabe für mein Notebook und den Port 4355 - nach einigem Suchen und Konfigurieren der richtigen IPv6 Adresse - eingerichtet.
+
+Als Konsequenz davon mussten die verwendeten `nc` Befehle mit der Option `-6` ausgeführt werden.
+
+
+
+Buffo richtete seine WSL2 Installation mit mirrored-network mode ein; eine Voraussetzung für IPv6!
+
+
+## Weiter geht's
+
 Was haben wir bis jetzt?
 
  * Serverseitig den Runner, und nebst dem lokalen Bot einen "botproxy" in Form des netcat Prozesses
  * Clientseitig ein Wrapper-Skript, welches den Bot ausführt und dessen Ein-/Ausgaben via netcat an den Server schickt
 
-<div class="alert alert-info">
+Was fehlt:
+
+...
+Ablauf
+...
+
+
+![Ablaufdiagramm](sequence.drawio.png "Ablaufdiagramm")
+
+Das Verbindungshandling ist in *socat* sauberer umgesetzt. Socat kann Umleitungen in Files und zu Prozessen intern behandeln, ohne Umweg über die Shell. Zusätzlich bietet es eine Unmenge an weiteren Features, wie ein kurzer Blick auf die [man page](http://www.dest-unreach.org/socat/doc/socat.html) zeigt.
+Socat ist quasi der „große Bruder“ von netcat:
+
+![Wenger Giant Swiss Knife](wenger_giant.jpg "socat: Der „große Bruder“ von netcat")
+
+
+
+## Fazit
+
+Sparring ist jederzeit mit dem aktuellen Bot-Entwicklungsstand peer-to-peer und ohne Herausgabe des Source-Codes oder eines Binaries möglich!
+
+Als Nebeneffekt konnte außerdem jeder von uns etwas lernen: Neue Tools wie `socat`, IPv6 Freigaben, ...
+
+<!-- div class="alert alert-info">
     Der Server muss über eine öffentliche IP erreichbar sein.
-</div>
-
-![socat: Der „große Bruder“ von netcat](wenger_giant.jpg)
-
+</div -->
 
 ## Weiterführende Links
 
-[socat - Multipurpose relay](http://www.dest-unreach.org/socat/)
+* [Botproxy repository on codeberg.org](https://codeberg.org/dlp/botproxy)
+* [socat - Multipurpose relay](http://www.dest-unreach.org/socat/)
+
