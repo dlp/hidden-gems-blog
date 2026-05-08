@@ -17,7 +17,7 @@ In diesem Beitrag fangen wir mit der einfachsten Idee an und arbeiten uns im Lau
 
 ## Recap: I/O Redirections
 
-In einem vorigen [Blogbeitrag](https://hiddengems.gymnasiumsteglitz.de/blog/2026-02-17-botsteuerung-aus-dem-terminal) haben wir über Weiterleitungen der Ein- und Ausgaben gelesen.  Dadurch ist es beispielsweise möglich, die Standardausgabe an einen anderen Prozess zu schicken, und dessen Ausgabe wiederum als Standardeingabe zu lesen.  Man ist dabei nicht auf die Standardeingabe und -ausgabe beschränkt, sondern kann das im Prinzip mit (fast) allen Filedeskriptoren machen.  So funktioniert auch die Kommunikation vonseiten des Runners mit den Bots.
+In einem vorigen [Blogbeitrag](https://hiddengems.gymnasiumsteglitz.de/blog/2026-02-17-botsteuerung-aus-dem-terminal) haben wir über Weiterleitungen der Ein- und Ausgaben gelesen.  Dadurch ist es beispielsweise möglich, die Standardausgabe an einen anderen Prozess zu schicken, und dessen Ausgabe wiederum als Standardeingabe zu lesen.  Man ist dabei nicht auf die Standardeingabe und -ausgabe beschränkt, sondern kann das im Prinzip mit (fast) allen Filedeskriptoren machen.  So funktioniert auch die Kommunikation vonseiten des Runners mit den Bots. Zusätzlich wird die Standardfehlerausgabe für Debuginformationen genutzt.
 
 ![Runner with local bots](runner_bots_local.drawio.png "Der Runner kommuniziert mit den Bots über die Standardein/-ausgabe.")
 
@@ -93,9 +93,9 @@ Der Runner legt die Aufzeichnung im Runner-Verzeichnis ab:
 
 
 
-## Going remote mit IPv6
+## Interlude: Going remote mit IPv6
 
-Was ich verschiegen habe: getestet wurde das erstmal lokal, was wunderbar funktioniert hat.
+Was ich verschwiegen habe: getestet wurde das erstmal lokal, was wunderbar funktioniert hat.
 Über das Internet hatten wir „Startschwierigkeiten“. Einer von uns muss der Server sein, und aus dem Internet erreichbar sein.
 Prinzipiell hat man innerhalb der EU ein [Recht auf eine öffentliche IP Adresse,](https://www.rtr.at/TKP/was_wir_tun/telekommunikation/konsumentenservice/faq/FAQ_oeffentliche_IP-adresse.de.html), sofern man diese anfordert. Von meinem aktuellen ISP hatte ich noch keine public IP Adresse angefordert. Aber mein ISP weist mir eine IPv6 Adresse zu - damit sollte mein Notebook auch aus dem Internet erreichbar sein! Eine gute Gelegeneit, um IPv6 Freigaben zu testen. Ich habe in meiner Fritz-Box Config eine Freigabe für mein Notebook und den Port 4355 - nach einigem Suchen und Konfigurieren der richtigen IPv6 Adresse - eingerichtet.
 
@@ -105,8 +105,10 @@ Als Konsequenz davon mussten die verwendeten `nc` Befehle mit der Option `-6` au
 
 Buffo richtete seine WSL2 Installation mit mirrored-network mode ein; eine Voraussetzung für IPv6!
 
+TODO?
 
-## Weiter geht's
+
+## Das Sparring-Skript
 
 Was haben wir bis jetzt?
 
@@ -115,12 +117,18 @@ Was haben wir bis jetzt?
 
 Was fehlt:
 
+ * Die richtige "Identität" des remote Bots. Da der Runner die `bot.yaml` einliest, bevor der Bot gestartet wird, können wie diese nicht als Teil des Bots mitschicken, weshalb wir ihn der Einfachheit halber als anonymen „RemoteBot“ spielen ließen.
+ * Es ist zwar schön, dass der Server aufzeichnet, aber der Spieler muss die Aufzeichnung dem remtote Spieler gesondert schicken. Klappt zu Beginn ganz gut über Discord, wird aber schnell nervig.
+ * Assymmetrie des „Benutzerinterface“. Die Kommandos am Server unterscheiden sich schon stark von denen, die der Client ausführen muss.
+
+Um die Usability zu verbessern, wollen wir die Abläufe der Identitätsbekanntgabe und der Übertragung der Aufzeichnung in ein Skript mit einfachen Aufrufoptionen einbauen.
+
 ...
 Ablauf
 ...
 
 
-![Ablaufdiagramm](sequence.drawio.png "Ablaufdiagramm")
+![Ablaufdiagramm](sequence.drawio.png "Ablaufdiagramm des sparring.sh")
 
 Das Verbindungshandling ist in *socat* sauberer umgesetzt. Socat kann Umleitungen in Files und zu Prozessen intern behandeln, ohne Umweg über die Shell. Zusätzlich bietet es eine Unmenge an weiteren Features, wie ein kurzer Blick auf die [man page](http://www.dest-unreach.org/socat/doc/socat.html) zeigt.
 Socat ist quasi der „große Bruder“ von netcat:
