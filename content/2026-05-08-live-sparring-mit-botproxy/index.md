@@ -112,36 +112,80 @@ TODO?
 
 Was haben wir bis jetzt?
 
- * Serverseitig den Runner, und nebst dem lokalen Bot einen "botproxy" in Form des netcat Prozesses
+ * Serverseitig den Runner, und nebst dem lokalen Bot einen „botproxy“ in Form des netcat Prozesses
  * Clientseitig ein Wrapper-Skript, welches den Bot ausführt und dessen Ein-/Ausgaben via netcat an den Server schickt
 
 Was fehlt:
 
- * Die richtige "Identität" des remote Bots. Da der Runner die `bot.yaml` einliest, bevor der Bot gestartet wird, können wie diese nicht als Teil des Bots mitschicken, weshalb wir ihn der Einfachheit halber als anonymen „RemoteBot“ spielen ließen.
+ * Die richtige „Identität“ des remote Bots. Da der Runner die `bot.yaml` einliest, bevor der Bot gestartet wird, können wie diese nicht als Teil des Bots mitschicken, weshalb wir ihn der Einfachheit halber als anonymen „RemoteBot“ spielen ließen.
  * Es ist zwar schön, dass der Server aufzeichnet, aber der Spieler muss die Aufzeichnung dem remtote Spieler gesondert schicken. Klappt zu Beginn ganz gut über Discord, wird aber schnell nervig.
- * Assymmetrie des „Benutzerinterface“. Die Kommandos am Server unterscheiden sich schon stark von denen, die der Client ausführen muss.
+ * Assymmetrie des „user interface“. Die Kommandos am Server unterscheiden sich schon stark von denen, die der Client ausführen muss.
 
 Um die Usability zu verbessern, wollen wir die Abläufe der Identitätsbekanntgabe und der Übertragung der Aufzeichnung in ein Skript mit einfachen Aufrufoptionen einbauen.
 
-...
-Ablauf
-...
-
+### Phasen des Ablaufs
 
 ![Ablaufdiagramm](sequence.drawio.png "Ablaufdiagramm des sparring.sh")
 
-Das Verbindungshandling ist in *socat* sauberer umgesetzt. Socat kann Umleitungen in Files und zu Prozessen intern behandeln, ohne Umweg über die Shell. Zusätzlich bietet es eine Unmenge an weiteren Features, wie ein kurzer Blick auf die [man page](http://www.dest-unreach.org/socat/doc/socat.html) zeigt.
+Das Skript läuft in drei Phasen ab. Jede Phase ist eine separate Verbindung initiiert vom Clients zum Server.
+
+ 1. Der Client schickt dem Server seine `bot.yaml`. Der Server legt ein temporäres Verzeichnis an, in welches er die `bot.yaml` legt.  Außerdem schreibt der Server den Zweizeiler des `start.sh`. Das ist das Verezichnis, das dem Runner als zweiter Bot angegeben wird.  Danach schickt der Server dem Client den Seed, der gespielt wird.  Das ist genau genommen nicht notwendig, da dieser aus der Aufzeichnung ersichtlich ist. Aber ich wollte den Seed im Filenamen der Auzeichnung selbst haben.
+ 2. Das eigentliche Sparring. Das ist die Simulation durch den Runner, die oben schon beschrieben wurde.  Der Server schreibt die Aufzeichnung davon in das temporäre Verzeichnis.
+ 3. Der Server schickt dem Client die Aufzeichnung. Der Client schreibt diese in ein temporäres Verzeichnis.  Nach diesem Transfer startet auf beiden Seiten lokal die Wiedergabe durch den Ansi-Player.
+
+
+### Socat
+
+Der Verbindungsaufbau und vor allem der -abbau hat in den ersten Versuchen nicht immer reibungslos geklappt. Nach ein wenig Recherche und Experimentieren haben wir *netcat* durch *socat* ersetzt.
+Das Verbindungshandling ist in *socat* sauberer umgesetzt. Außerdem kann *socat* Umleitungen in Files und zu Prozessen intern behandeln, ohne Umweg über die Shell. Zusätzlich bietet es eine enorme Menge an weiteren Features, wie ein kurzer Blick auf die [man page](http://www.dest-unreach.org/socat/doc/socat.html) zeigt.
 Socat ist quasi der „große Bruder“ von netcat:
 
 ![Wenger Giant Swiss Knife](wenger_giant.jpg "socat: Der „große Bruder“ von netcat")
 
 
+So vereinfacht sich beispielsweise der Aufruf im Client und macht die Nutzung von `coproc` überflüssig:
+
+```bash
+socat EXEC:"./start.sh $@" TCP6:[${HOST}]:${PORT},retry=10,interval=1
+```
+
+Der Aufruf im serverseitigen `start.sh` sieht auch nicht wesentlich komplizierter aus:
+
+```bash
+exec socat - TCP6-LISTEN:${PORT=4355},reuseaddr
+```
+
+Für einen unidirektionalen File-transfer, wie er für die Aufzeichnung verwendet wird, schreiben wir:
+
+```bash
+# on the server
+socat -u OPEN:"$fname" TCP6-LISTEN:${PORT},reuseaddr
+
+# on the client
+socat -u TCP6:[${REMOTE_HOST}]:${PORT},retry=10,interval=1 OPEN:"$fname",creat,trunc
+```
+
+Die Verwendung von `-u` (unidirektionaler Modus) erlaubt *socat* auf Besonderheiten des TCP Protokolls einzugehen, was dessen Nutzung robuster macht.
+Man kann auch auszuführende Befehle adressieren, so zum Beispiel das Empfangen und Schreiben der `bot.yaml` am Server sowie das anschließende Zurückschicken des Seed, in der initialen Phase:
+
+```bash
+socat TCP6-LISTEN:${PORT},reuseaddr  SYSTEM:"cat > ${RUNDIR}/bot.yaml && echo ${SEED}"
+```
+
+### Rückspiel (swap)
+
+Im finalen Skript wird auch die „Rückrunde“ mit `--swap` simuliert.  Das und der zugehörige Transfer der Aufzeichnung geschieht *im Hintergrund* während des Playbacks der ersten Runde. Das wollen wir an dieser Stelle nicht weiter ausführen - werft am besten einen Blick in den [Source Code](https://codeberg.org/dlp/botproxy)!
+
+
+### Beispielaufrufe und Ausgaben
+
+TODO
 
 ## Fazit
 
 Sparring ist jederzeit mit dem aktuellen Bot-Entwicklungsstand peer-to-peer und ohne Herausgabe des Source-Codes oder eines Binaries möglich!
 
-Als Nebeneffekt konnte außerdem jeder von uns etwas lernen: Neue Tools wie `socat`, IPv6 Freigaben, ...
+Als Nebeneffekt haben wir beide außerdem so einiges gelernt: Neue Tools wie `socat`, IPv6 Freigaben, ...
 
 <!-- div class="alert alert-info">
     Der Server muss über eine öffentliche IP erreichbar sein.
