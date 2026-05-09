@@ -24,20 +24,20 @@ In einem vorigen [Blogbeitrag](https://hiddengems.gymnasiumsteglitz.de/blog/2026
 
 ## Netcat
 
-Wenn es nun irgendwie möglich wäre, die Ein- und Ausgaben zum und vom Runner nict nur an einen lokalen Bot umzuleiten, sondern über das Netzwerk zu schicken, könnte man Runner und Bot auf getrennten Rechnern ausführen...  Meet **netcat**! Es gilt als Schweizer Taschenmesser für Netzwerkverbindungen, und wird am häufigsten genau dazu eingesetzt, Weiterleitungen über das Netzwerk zu realisieren.
+Wenn es nun irgendwie möglich wäre, die Ein- und Ausgaben zum und vom Runner nicht nur an einen lokalen Bot umzuleiten, sondern über das Netzwerk zu schicken, könnte man Runner und Bot auf getrennten Rechnern ausführen...  Meet **netcat**! Es gilt als Schweizer Taschenmesser für Netzwerkverbindungen, und wird am häufigsten genau dazu eingesetzt, Weiterleitungen über das Netzwerk zu realisieren.
 
 ![Victorinox Explorer Swiss Knife](victorinox_explorer.jpg "netcat: Schweizer Taschenmesser für Netzwerkverbindungen")
 
 
-Die Idee ist dabei folgende. Ein Spieler übernimmt die Rolle des Servers: der Runner und der eigene Bot des Spielers werden auf dessen Rechner ausgeführt.
+Die Idee ist dabei folgende. Ein Spieler übernimmt die Rolle des Servers: Der Runner und der eigene Bot des Spielers werden auf dessen Rechner ausgeführt.
 Mithilfe von jeweils einem netcat (`nc`) Prozess an den Enden der Verbindung wollen wir die Datenströme zwischen Runner und dem anderen Bot über das Netzwerk schicken, nämlich zum Rechner des anderen Spielers, der in der Client Rolle ist. Wir verwenden dazu TCP, ein verbindungsorientiertes Protokoll. Am Server startet `nc` im *listening* Modus, er wartet auf eingehende Verbindungen. Der Client initiiert den Verbindungsaufbau mittels *connect* zum Server.
 
 ![Runner with one remote bot](runner_bot_remote.drawio.png "Der Runner kommuniziert mit einem entfernten Bot.")
 
 
-Der Runner sieht hierbei keinen Unterschied, lediglich die Antworten lassen länger auf sich warten - wir merken uns, die Timeouts zu deaktivieren.  Auch der Bot sieht keinen Unterschied, er liest weiterhin das JSON von der Standardeingabe, führt seine Berechnungen durch und schreibt move & highlight auf die Standardausgabe. Und die Debugausgaben auf der Standardfehlerausgabe? Die bleiben lokal. Entweder lesen wir mit wenn sie auf dem Terminal ausgegeben werden, oder wir leiten sie alternativ auf `/dev/null` um.
+Der Runner sieht hierbei keinen Unterschied, lediglich die Antworten lassen länger auf sich warten - wir merken uns: Die Timeouts deaktivieren!  Auch der Bot sieht keinen Unterschied, er liest weiterhin das JSON von der Standardeingabe, führt seine Berechnungen durch und schreibt move & highlight auf die Standardausgabe. Und die Debugausgaben auf der Standardfehlerausgabe? Die bleiben lokal. Entweder lesen wir mit, wenn sie auf dem Terminal ausgegeben werden, oder wir leiten sie alternativ auf `/dev/null` um.
 
-Wie sieht das in Code aus? Für den Server müssen wir einen Bot-Proxy bereitstellen, den der Runner als Bot wahrnimmt, aber dessen Implementierung ausschließlich aus dem lauschenden netcat Prozess besteht.
+Wie sieht das im Code aus? Für den Server müssen wir einen Bot-Proxy bereitstellen, den der Runner als Bot wahrnimmt, aber dessen Implementierung ausschließlich aus dem lauschenden netcat Prozess besteht.
 Wir wählen als Kommunikationsport 4355, aber prinzipiell ist jeder beliebige Port, der nicht schon für andere Protokolle in Verwendung ist, möglich. Um auf Portnummern niedriger als 1024 zu lauschen, braucht man allerdings Admin-Rechte.
 Der Bot *ist* der `nc`, siehe folgende `botproxy/start.sh`:
 
@@ -65,7 +65,7 @@ Den Runner rufen wir auf mit:
 ```
 Den `SEED` und `LOCAL_BOT` erwarten wir uns als Umgebungsvariablen.  `LOCAL_BOT` ist der Pfad zum lokalen Bot des Spielers, `botproxy` das Verzeichnis mit unseren zwei kleinen Dateien.
 
-Der Runner soll ohne timeouts und sonstigen Ausgaben laufen, allerdings soll er das Duell aufzeichnen. Wird der Command ausgeführt, wartet der Runner auf den zweiten Bot, der wiederum auf eine eingehende Verbindung.
+Der Runner soll ohne Timeouts und sonstigen Ausgaben laufen, allerdings soll er das Duell aufzeichnen. Wird der Command ausgeführt, wartet der Runner auf den zweiten Bot, der wiederum auf eine eingehende Verbindung.
 
 
 Damit sich der Client verbindet, legen wir ein neues Skript im Botverzeichnis des Client Bots an.  Wir müssen also auch hier nichts ändern, sondern bauen eine optionale Erweiterung. Wir nennen das neue Skript `botproxy_connect.sh` mit folgendem Inhalt:
@@ -95,17 +95,20 @@ Der Runner legt die Aufzeichnung im Runner-Verzeichnis ab:
 
 ## Interlude: Going remote mit IPv6
 
-Was ich verschwiegen habe: getestet wurde das erstmal lokal, was wunderbar funktioniert hat.
+Was ich bisher verschwiegen habe: Getestet wurde das erstmal lokal, was auch wunderbar funktioniert hat.
+Nun brauche ich aber einen Tester. Tja, dann frage ich mal den Buffo (DLH629 - 😮).
+
 Über das Internet hatten wir „Startschwierigkeiten“. Einer von uns muss der Server sein, und aus dem Internet erreichbar sein.
-Prinzipiell hat man innerhalb der EU ein [Recht auf eine öffentliche IP Adresse,](https://www.rtr.at/TKP/was_wir_tun/telekommunikation/konsumentenservice/faq/FAQ_oeffentliche_IP-adresse.de.html), sofern man diese anfordert. Von meinem aktuellen ISP hatte ich noch keine public IP Adresse angefordert. Aber mein ISP weist mir eine IPv6 Adresse zu - damit sollte mein Notebook auch aus dem Internet erreichbar sein! Eine gute Gelegeneit, um IPv6 Freigaben zu testen. Ich habe in meiner Fritz-Box Config eine Freigabe für mein Notebook und den Port 4355 - nach einigem Suchen und Konfigurieren der richtigen IPv6 Adresse - eingerichtet.
+Prinzipiell hat man innerhalb der EU ein [Recht auf eine öffentliche IP Adresse,](https://www.rtr.at/TKP/was_wir_tun/telekommunikation/konsumentenservice/faq/FAQ_oeffentliche_IP-adresse.de.html) sofern man diese anfordert. Von meinem aktuellen ISP hatte ich noch keine public IP Adresse angefordert. Aber mein ISP weist mir eine IPv6 Adresse zu - damit sollte mein Notebook auch aus dem Internet erreichbar sein! Eine gute Gelegeneit, um IPv6 Freigaben zu testen. Ich habe in meiner Fritz-Box Config eine Freigabe für mein Notebook und den Port 4355 - nach einigem Suchen und Konfigurieren der richtigen IPv6 Adresse - eingerichtet.
 
 Als Konsequenz davon mussten die verwendeten `nc` Befehle mit der Option `-6` ausgeführt werden.
 
 
 
-Buffo richtete seine WSL2 Installation mit mirrored-network mode ein; eine Voraussetzung für IPv6!
+😮 richtete seine WSL2 Installation mit mirrored-network mode ein; eine Voraussetzung für IPv6! Eine Anleitung hierfür findet ihr unter [Netzwerk im gespiegelten Modus](https://learn.microsoft.com/de-de/windows/wsl/networking#mirrored-mode-networking). Die Portfreigaben fand 😮 in seinem Router hier:
 
-TODO?
+![Fritz!Box](fritzbox.png "Fritz!Box")
+
 
 
 ## Das Sparring-Skript
@@ -129,7 +132,7 @@ Um die Usability zu verbessern, wollen wir die Abläufe der Identitätsbekanntga
 
 Das Skript läuft in drei Phasen ab. Jede Phase ist eine separate Verbindung initiiert vom Clients zum Server.
 
- 1. Der Client schickt dem Server seine `bot.yaml`. Der Server legt ein temporäres Verzeichnis an, in welches er die `bot.yaml` legt.  Außerdem schreibt der Server den Zweizeiler des `start.sh`. Das ist das Verezichnis, das dem Runner als zweiter Bot angegeben wird.  Danach schickt der Server dem Client den Seed, der gespielt wird.  Das ist genau genommen nicht notwendig, da dieser aus der Aufzeichnung ersichtlich ist. Aber ich wollte den Seed im Filenamen der Auzeichnung selbst haben.
+ 1. Der Client schickt dem Server seine `bot.yaml`. Der Server legt ein temporäres Verzeichnis an, in welches er die `bot.yaml` legt.  Außerdem schreibt der Server den Zweizeiler des `start.sh`. Das ist das Verzeichnis, das dem Runner als zweiter Bot angegeben wird.  Danach schickt der Server dem Client den Seed, der gespielt wird.  Das ist genau genommen nicht notwendig, da dieser aus der Aufzeichnung ersichtlich ist. Aber ich wollte den Seed im Filenamen der Aufzeichnung selbst haben.
  2. Das eigentliche Sparring. Das ist die Simulation durch den Runner, die oben schon beschrieben wurde.  Der Server schreibt die Aufzeichnung davon in das temporäre Verzeichnis.
  3. Der Server schickt dem Client die Aufzeichnung. Der Client schreibt diese in ein temporäres Verzeichnis.  Nach diesem Transfer startet auf beiden Seiten lokal die Wiedergabe durch den Ansi-Player.
 
@@ -177,9 +180,19 @@ socat TCP6-LISTEN:${PORT},reuseaddr  SYSTEM:"cat > ${RUNDIR}/bot.yaml && echo ${
 Im finalen Skript wird auch die „Rückrunde“ mit `--swap` simuliert.  Das und der zugehörige Transfer der Aufzeichnung geschieht *im Hintergrund* während des Playbacks der ersten Runde. Das wollen wir an dieser Stelle nicht weiter ausführen - werft am besten einen Blick in den [Source Code](https://codeberg.org/dlp/botproxy)!
 
 
-### Beispielaufrufe und Ausgaben
+### Der Kommentar von Buffo - 😮
 
-TODO
+Die nächsten Zeilen schreibe tatsächlich ich 😮 (a.k.a. Buffo, DLH629, Michael)!
+
+Zunächst einmal vielen Dank an Dich Daniel, dass Du diese verwegene Idee ([Feature-Request](https://github.com/specht/hidden-gems/issues/54)) nicht nur aufgenommen, sondern auch umgesetzt hast!
+
+Dieser Hidden Gems Wettbewerb ist ja ohnehin schon genial. Es macht allerdings *noch* mehr Spaß, wenn man sich *auch* außerhalb der täglichen Scrims & ggf. Sparrings messen kann. Nicht zur Strafe, nur zur Übung! Ich persönlich habe natürlich einen *taktischen* Vorteil, denn ich möchte mich ja noch verbessern und brauche dafür "*Euch alle!*" als Sparrings-Partner 😏! Und so schaut's gerade gegen Daniel aus... 😟😕😂:
+
+<div class='f ansi-player-auto-pickup mb-3' data-url='recording-10oibolv98.json.gz' data-autoplay='false'>
+    <div class='ansi-player-screen'></div>
+</div>
+
+Randbemerkung: Ich persönlich entwickle & teste meinen Bot unter Windows 11 25H2. Um dieses Framework einzusetzen verwende ich WSL2 mit Ubuntu-24.04. Das Framework kann man unter Windows auch ohne Hypervisor sowie WSL2 einsetzen, erfordert allerdings eine Umgebung wie [cygwin](https://https://www.cygwin.com/). Das ist allerdings sehr viel aufwändiger, da Ihr *socat* dort erst einmal in der richtigen Source-Version übersetzen müsstet. Bei Bedarf gebe ich gerne eine Anleitung dazu.
 
 ## Fazit
 
