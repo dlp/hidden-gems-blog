@@ -9,6 +9,30 @@ tags: ["Sparring", "Linux", "WSL2", "remote", "netcat", "socat", "redirection", 
 
 # Live-Sparring mit Bot-Proxy
 
+<div class="alert alert-info">
+    Update vom 16.05.2026: TL;DR
+</div>
+
+Für das Live-Sparring muss einer der Partner als Server aus dem Internet erreichbar sein.
+Mit folgenden Befehlen könnt ihr als Client/Server gegeneinander spielen:
+
+```bash
+git clone https://codeberg.org/dlp/botproxy.git
+cd botproxy
+
+# start as server:
+./sparring.sh -r <path_to_runner> -s -e <seed> <path_to_bot>
+
+# start as client:
+./sparring.sh -r <path_to_runner> -c <server_ip> <path_to_bot>
+```
+
+
+<hr />
+
+_Ab hier beginnt der Originalartikel._
+
+
 Die Idee entstand durch eine Unterhaltung am [Discord-Server](https://hiddengems.gymnasiumsteglitz.de/news#inoffizieller-discord-server-fr-die-community).  Es gibt den [Feature-Request](https://github.com/specht/hidden-gems/issues/54) nach angemeldetem Sparring, wonach man einen Mitspieler herausfordern können soll, und bei dessen Annahme ein Duell über Nacht nach der regulären Auswertung oder in der Idle-Time gescheduled wird.
 So eine Funktion ist natürlich aufwendig in der Implementierung; es solle aber eigentlich relativ einfach möglich sein, ein peer-to-peer Sparring umzusetzen, bei welchem die Bots jeweils auf dem eigenen Rechner ausgeführt werden.
 
